@@ -1,9 +1,12 @@
 .data
 vendorString db 12 dup(0), 0
 
+
+; rax is the return register which will return
+; values from function.
 .code
 SomeFunction proc
-	mov rax, 123
+	mov rax, 123	; Load decimal value 123 to rax
 	ret
 SomeFunction endp
 

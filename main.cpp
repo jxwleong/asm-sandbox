@@ -2,6 +2,7 @@
 
 using namespace std;
 
+extern "C" int SomeFunctionNasm();
 extern "C" int SomeFunction();
 extern "C" bool GetCPUIDSupport();
 extern "C" char* GetVendorString();
@@ -16,6 +17,7 @@ string getBoolStr(bool boolean) {
 
 
 int main() {
+	cout << "The result from NASM: " << SomeFunctionNasm() << endl;
 	cout << "The result is: " << SomeFunction() << endl;
 	cout << "Support CPUID Instruction?: " << getBoolStr(GetCPUIDSupport()) << endl;
 	cout << "Vendor String: " << GetVendorString() << endl;
