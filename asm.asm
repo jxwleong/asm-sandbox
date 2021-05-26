@@ -45,7 +45,6 @@ GetVendorString proc
 
 	pop rbx
 	ret
-	ret
 GetVendorString endp
 
 GetLogicalProcessorCount proc

@@ -4,7 +4,7 @@ section .text
 global SomeFunctionNasm
 
 SomeFunctionNasm:
-	mov rax, 111	; Load decimal value 123 to rax
+	mov rax, 111	; Load decimal value 111 to rax
 	ret
 
 
