@@ -2,7 +2,7 @@
 .data
 vendorString db 12 dup(0), 0	; 13 chars array, 0 in the end
 								; so will stop printing at 0
-
+processorBrandString db 49 dup(0), 0	; 49 char array
 ; rax is the return register which will return
 ; values from function.
 .code
@@ -84,4 +84,13 @@ GetLogicalProcessorCount proc
 	pop rbx		; Restore caller's RBX
 	ret
 GetLogicalProcessorCount endp
+
+; unsigned int GetHighestExtendedFunction
+; Highest value/function number implemented to be loaded into eax
+GetHighestExtendedFunction proc
+	mov eax, 80000000h
+	cpuid
+	ret
+GetHighestExtendedFunction endp
+
 end

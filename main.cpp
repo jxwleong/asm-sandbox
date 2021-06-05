@@ -4,7 +4,7 @@ using namespace std;
 
 extern "C" int SomeFunctionNasm();
 extern "C" int CpuID();
-//extern "C" int TEST();
+extern "C" unsigned int GetHighestExtendedFunction();
 extern "C" int SomeFunction();
 extern "C" bool GetCPUIDSupport();
 extern "C" char* GetVendorString();
@@ -28,7 +28,8 @@ std::string toBinary(int n)
 int main() {
 	cout << "The result from NASM: " << SomeFunctionNasm() << endl;
 	cout << "CPUID: " << toBinary(CpuID()) << endl;
-	//cout << "TEST: " << toBinary(TEST()) << endl;
+	cout << "Highest supported extended function: " << GetHighestExtendedFunction() << "	BIN: " << \
+				toBinary(GetHighestExtendedFunction()) << endl;
 	cout << "The result is: " << SomeFunction() << endl;
 	cout << "Support CPUID Instruction?: " << getBoolStr(GetCPUIDSupport()) << endl;
 	cout << "Vendor String: " << GetVendorString() << endl;

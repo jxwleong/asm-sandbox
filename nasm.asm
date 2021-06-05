@@ -3,7 +3,6 @@
 section .text
 global SomeFunctionNasm
 global CpuID
-global TEST
 
 SomeFunctionNasm:
 	mov rax, 111	; Load decimal value 111 to rax
@@ -14,8 +13,3 @@ CpuID:
 	cpuid	
 	ret
 
-TEST:
-	mov eax, 3h
-	cpuid
-	ret
-end
