@@ -9,6 +9,7 @@ extern "C" int SomeFunction();
 extern "C" bool GetCPUIDSupport();
 extern "C" char* GetVendorString();
 //extern "C" int GetLogicalProcessorCount();
+extern "C" char* GetProcessorBrandString();
 
 string getBoolStr(bool boolean) {
 	if (boolean == 1)
@@ -37,5 +38,6 @@ int main() {
 	// Have to check with datasheet...
 	// Looks the the cpuid instruction is obselete, still need some digging..
 	//cout << "Logical Processor Count: " << GetLogicalProcessorCount() << endl;
+	cout << "Processor Brand String: " << GetProcessorBrandString() << endl;
 	return 0;
 }

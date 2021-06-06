@@ -2,7 +2,8 @@
 .data
 vendorString db 12 dup(0), 0	; 13 chars array, 0 in the end
 								; so will stop printing at 0
-processorBrandString db 49 dup(0), 0	; 49 char array
+processorBrandString db 48	; 48 char array
+
 ; rax is the return register which will return
 ; values from function.
 .code
@@ -49,9 +50,9 @@ No_CPUID:
 GetCPUIDSupport endp
 
 ; char* GetVendorString()
-; CPUID_0000_0000_EBX:EDX:ECX
-; CPUID__function_number__register_for_output
-; This means that laod 0000_0000 to EAX, and the
+; CPUID.0H:EBX:EDX:EDX
+; CPUID.function_number_to_be_loaded_to_EAX:register_for_output
+; This means that laod 0H to EAX, and the
 ; output we're looking is at EBX:EDX:ECX
 GetVendorString proc
 	push rbx	; Save RBX
@@ -62,7 +63,7 @@ GetVendorString proc
 	; Move the value in registers into *vendorString in the specific order:
 	; (Must in this order, else the chars *vendorString will be positioned properly)
 	mov dword ptr [rax], ebx	; 1st 4 bytes of vendor string in ebx
-	mov  dword ptr [rax+4], edx ; 2nd 4 bytes of vendor string in edx
+	mov dword ptr [rax+4], edx  ; 2nd 4 bytes of vendor string in edx
 	mov dword ptr[rax+8], ecx	; 3rd 4 bytes of vendor string in ecx
 
 	pop rbx		; Restore caller's RBX
@@ -73,7 +74,7 @@ GetVendorString endp
 ; https://stackoverflow.com/questions/2901694/how-to-detect-the-number-of-physical-processors-cores-on-windows-mac-and-linu
 ; https://stackoverflow.com/questions/1647190/cpuid-on-intel-i7-processors
 ; int GetLogicalProcessorCount()
-; CPUID_0000_1011_EBX
+; CPUID.0BH:EBX
 GetLogicalProcessorCount proc
 	push rbx	; Save caller RBX
 	;mov eax, 1011b	; Move 0xb to eax
@@ -92,5 +93,46 @@ GetHighestExtendedFunction proc
 	cpuid
 	ret
 GetHighestExtendedFunction endp
+
+
+; char* GetProcessorBrandString()
+; EAX=80000002h,80000003h,80000004h: Processor Brand String
+; 1st: CPUID.80000002H:EAX:EBX:ECX:EDX
+; 2nd: CPUID.80000003H:EAX:EBX:ECX:EDX
+; 3rd: CPUID.80000004H:EAX:EBX:ECX:EDX
+GetProcessorBrandString proc
+	push rbx	; Save caller RBX
+	; Since the brand string is in eax, ebx, ecx and edx so the pointer
+	; is loaded into another general purpose register, in this case I use 
+	; r8, any other unused register will do..
+	lea r8, processorBrandString	; Load address of *processorBrandString into r8	
+
+	mov eax, 80000002h
+	cpuid
+	mov dword ptr [r8], eax	; 1st 4 bytes of  of processorBrandString string in eax'
+							; This steps goes on until the last 4 bytes...
+	mov dword ptr [r8+4], ebx	
+	mov dword ptr [r8+8], ecx  
+	mov dword ptr [r8+12], edx	
+
+	mov eax, 80000003h
+	cpuid
+	mov dword ptr [r8+16], eax
+	mov dword ptr [r8+20], ebx	
+	mov dword ptr [r8+24], ecx 
+	mov dword ptr [r8+28], edx
+
+	mov eax, 80000004h
+	cpuid
+	mov dword ptr [r8+32], eax
+	mov dword ptr [r8+36], ebx	
+	mov dword ptr [r8+40], ecx  
+	mov dword ptr [r8+44], edx	
+
+	mov rax, r8	; Load the pointer back to rax to return the address to caller. 
+	pop rbx		; Restore caller's RBX
+
+	ret
+GetProcessorBrandString endp
 
 end
